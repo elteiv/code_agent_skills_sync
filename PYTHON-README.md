@@ -48,6 +48,39 @@ $env:SKILL_MANIFEST_URL = "https://skills.example.com/manifest.json"
 python .\sync_skills.py
 ```
 
+## Standalone Packaging
+
+The repository includes packaging assets to build standalone executables so users do not need Python installed.
+
+Artifacts:
+
+- Windows: `release/windows/sync-skills.exe`
+- Unix/Linux: `release/unix/sync-skills` when built on a Unix host
+- Linux from Windows via Docker: `release/linux/sync-skills`
+
+Build on Windows:
+
+```powershell
+.\build\build-windows.ps1
+```
+
+Build on Unix:
+
+```sh
+chmod +x ./build/build-unix.sh
+./build/build-unix.sh
+```
+
+Build a Linux binary from Windows with Docker:
+
+```powershell
+.\build\build-linux.ps1
+```
+
+All packaging paths use `PyInstaller` and produce self-contained executables for the target platform. Cross-platform output still needs to be built on the target OS, or through the provided Linux Docker builder.
+
+For Linux compatibility, prefer the Docker-based Linux build. It now builds from an older Debian Bullseye Python image instead of a newer distro image, which lowers the glibc baseline compared with the original build and avoids the `GLIBC_2.38` class of failures caused by compiling on a newer system. A Linux executable built with PyInstaller is not fully static, so no glibc-based build can be universally portable to every Linux distribution. If you need maximum portability beyond this baseline, the next step is to ship per-distro builds or switch to a musl/static distribution strategy.
+
 ## Claude Code SessionStart Hook
 
 Add the script to your Claude Code SessionStart hook and pass the manifest URL through environment variables. A representative hook command looks like this:

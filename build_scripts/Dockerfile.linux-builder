@@ -1,0 +1,18 @@
+FROM python:3.11-bullseye
+
+WORKDIR /workspace
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends binutils \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY build_scripts/requirements-build.txt ./build_scripts/requirements-build.txt
+RUN python -m pip install --no-cache-dir --upgrade pip \
+    && python -m pip install --no-cache-dir -r build_scripts/requirements-build.txt
+
+COPY sync_skills.py ./sync_skills.py
+COPY sync_skills.spec ./sync_skills.spec
+
+RUN python -m PyInstaller --clean --noconfirm ./sync_skills.spec
+
+CMD ["/bin/sh", "-lc", "cp /workspace/dist/sync-skills /out/sync-skills && chmod +x /out/sync-skills"]

@@ -10,5 +10,9 @@ venv/
 .gitignore
 node_modules/
 dist/
-build/
+build/*
+build_scripts/*
+!build/requirements-build.txt
+!build_scripts/requirements-build.txt
+release/*
 *.log
