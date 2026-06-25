@@ -19,6 +19,26 @@ When S3 is configured, the server reads skills from the bucket first. If S3 has 
 python -m pip install -r .\server\requirements.txt
 ```
 
+## AWS Lambda Container
+
+The server can be packaged as an AWS Lambda-compatible container image. The FastAPI app is adapted to Lambda with `Mangum`, and the image uses the AWS Python 3.11 Lambda base image.
+
+Build the image from the repository root:
+
+```powershell
+docker build -t skill-server-lambda -f .\server\Dockerfile .
+```
+
+For AWS Lambda deployment, push the image to ECR and create a Lambda function from that image. The handler is already baked into the image as `server.lambda_handler.handler`.
+
+Local Lambda-style container run:
+
+```powershell
+docker run --rm -p 9000:8080 skill-server-lambda
+```
+
+After the container starts, invoke it with an API Gateway v2 event payload or front it with a Lambda Function URL or API Gateway in AWS.
+
 ## Run
 
 ```powershell
@@ -67,3 +87,4 @@ python .\sync_skills.py
 - Responses include `X-Skill-Source` with `s3`, `local`, or `local-fallback`.
 - Path traversal is blocked before files are returned.
 - `version` is emitted as the current UTC timestamp each time the manifest is requested.
+- The Lambda container image includes the local `server/skills` directory, so fallback content is available even when the function is not connected to S3.

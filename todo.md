@@ -1,0 +1,4 @@
+- Remove skills no longer available in repo
+- Implement user authentication instead of API key
+- Retrieve skills based on user roles
+- How to distribute this? script and guide?

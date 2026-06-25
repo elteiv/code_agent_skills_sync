@@ -57,14 +57,20 @@ Add the script to your Claude Code SessionStart hook and pass the manifest URL t
   "hooks": {
     "SessionStart": [
       {
-        "command": "python c:/Work/101D/Beacon/src/claude-code-hooks/sync_skills.py",
-        "env": {
-          "SKILL_MANIFEST_URL": "https://skills.example.com/manifest.json",
-          "SKILL_API_TOKEN": "${SKILL_API_TOKEN}",
-          "SKILL_DEST_DIR": ".claude/skills"
-        }
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 sync_skills.py"
+          }
+        ]
       }
     ]
+  },
+  "env": {
+     "SKILL_MANIFEST_URL": "https://{server}/manifest.json",
+     "SKILL_API_TOKEN": "{API TOKEN}",
+     "SKILL_DEST_DIR": ".claude/skills"
   }
 }
 ```
